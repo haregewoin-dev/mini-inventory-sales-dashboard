@@ -1,6 +1,72 @@
-// ------------------------------------------------------
-// ENUMS
-// ------------------------------------------------------
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             String          @id
+  name           String
+  email          String          @unique
+  role           Role            @default(STAFF)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  activityLogs   ActivityLog[]
+  sales          Sale[]
+  stockMovements StockMovement[]
+}
+
+model Product {
+  id             String          @id @default(uuid())
+  name           String
+  sku            String          @unique
+  category       String?
+  price          Decimal         @db.Decimal(10, 2)
+  quantity       Int             @default(0)
+  supplier       String?
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  sales          Sale[]
+  stockMovements StockMovement[]
+}
+
+model Sale {
+  id           String   @id @default(uuid())
+  product_id   String
+  user_id      String
+  quantity     Int
+  sale_price   Decimal  @db.Decimal(10, 2)
+  total_amount Decimal  @db.Decimal(10, 2)
+  sale_date    DateTime @default(now())
+  created_at   DateTime @default(now())
+  product      Product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model StockMovement {
+  id              String          @id @default(uuid())
+  product_id      String
+  user_id         String
+  change_type     StockChangeType
+  quantity_change Int
+  note            String?
+  created_at      DateTime        @default(now())
+  product         Product         @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id         String   @id @default(uuid())
+  user_id    String
+  action     String
+  metadata   Json?
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
 
 enum Role {
   ADMIN
@@ -11,79 +77,4 @@ enum StockChangeType {
   RESTOCK
   SALE
   ADJUSTMENT
-}
-
-// ------------------------------------------------------
-// MODELS
-// ------------------------------------------------------
-
-model User {
-  id            String          @id @default(uuid())
-  name          String
-  email         String          @unique
-  password_hash String
-  role          Role
-  created_at    DateTime        @default(now())
-  updated_at    DateTime        @updatedAt
-
-  // Relations
-  sales          Sale[]
-  stockMovements StockMovement[]
-  activityLogs   ActivityLog[]
-}
-
-model Product {
-  id         String          @id @default(uuid())
-  name       String
-  sku        String          @unique
-  category   String?
-  price      Decimal         @db.Decimal(10, 2)
-  quantity   Int             @default(0)
-  supplier   String?
-  created_at DateTime        @default(now())
-  updated_at DateTime        @updatedAt
-
-  // Relations
-  sales          Sale[]
-  stockMovements StockMovement[]
-}
-
-model Sale {
-  id           String    @id @default(uuid())
-  product_id   String
-  user_id      String
-  quantity     Int
-  sale_price   Decimal   @db.Decimal(10, 2)
-  total_amount Decimal   @db.Decimal(10, 2)
-  sale_date    DateTime  @default(now())
-  created_at   DateTime  @default(now())
-
-  // Relations
-  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
-model StockMovement {
-  id             String           @id @default(uuid())
-  product_id     String
-  user_id        String
-  change_type    StockChangeType
-  quantity_change Int
-  note           String?
-  created_at     DateTime         @default(now())
-
-  // Relations
-  product Product @relation(fields: [product_id], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-}
-
-model ActivityLog {
-  id         String    @id @default(uuid())
-  user_id    String
-  action     String
-  metadata   Json?
-  created_at DateTime  @default(now())
-
-  // Relations
-  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
