@@ -1,9 +1,18 @@
+import dotenv from "dotenv/config";
 import express from "express";
+import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import { RequireAuth } from "./middleware/requireAuths.js";
 import { requireRole } from "./middleware/reqRole.js";
 
 const app = express();
+const url = process.env.FRONTEND_URL;
+
+app.use(cors({
+  origin: url,
+  credentials: true
+})
+)
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
