@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { supabase } from "@/lib/supabase.js";
-import prisma from "@/lib/prisma.js";
-import { RequireAuth } from "@/middleware/requireAuths";
-import { requireRole } from "@/middleware/reqRole";
+import { supabase } from "../lib/supabase";
+import prisma from "../lib/prisma";
+import { RequireAuth } from "../middleware/requireAuths";
+import { requireRole } from "../middleware/reqRole";
 
 
 const router = Router()

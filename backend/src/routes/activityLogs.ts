@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { RequireAuth } from "@/middleware/requireAuths";
+import { RequireAuth } from "../middleware/requireAuths";
 import { listActivityLogs } from "../services/activityLogService";
 
 

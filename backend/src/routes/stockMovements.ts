@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { RequireAuth } from "@/middleware/requireAuths";
-import { requireRole } from "@/middleware/reqRole";
+import { RequireAuth } from "../middleware/requireAuths";
+import { requireRole } from "../middleware/reqRole";
 import {
   listStockMovements,
   createManualMovement,

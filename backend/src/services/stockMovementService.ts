@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../lib/prisma";
 import type { StockChangeType } from "@prisma/client";
 
 const VALID_TYPES: StockChangeType[] = ["RESTOCK", "SALE", "ADJUSTMENT"];

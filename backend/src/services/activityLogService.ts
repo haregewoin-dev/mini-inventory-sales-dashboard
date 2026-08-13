@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../lib/prisma";
 
 export async function listActivityLogs(filters: { userId?: string; from?: string; to?: string }) {
   return prisma.activityLog.findMany({
