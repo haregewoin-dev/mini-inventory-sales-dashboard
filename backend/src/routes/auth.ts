@@ -1,16 +1,18 @@
 import { Router } from "express";
 import { supabase } from "@/lib/supabase.js";
 import prisma from "@/lib/prisma.js";
+import { RequireAuth } from "@/middleware/requireAuths";
+import { requireRole } from "@/middleware/reqRole";
 
 
 const router = Router()
 
-router.post("/signup", async(req, res)=>{
-    const {email, name, password} = req.body;
+router.post("/signup", RequireAuth, requireRole("ADMIN"), async(req, res)=>{
+    const {email, name, password, role} = req.body;
     if(!email ||!name|| !password){
         return res.status(400).json({error:"email, name and password required!"})
     }
-    
+    const assignedRole = role === "ADMIN" ? "ADMIN" : "STAFF";
     const {data, error }  = await supabase.auth.admin.createUser({
         email,
         password,
@@ -29,7 +31,7 @@ router.post("/signup", async(req, res)=>{
             id: data.user.id,
             email: data.user.email,
             name,
-            role: "STAFF",
+            role: assignedRole,
         },
     });
     res.status(201).json({user:dbUser})
@@ -49,6 +51,7 @@ router.post("/signin", async (req, res) => {
   }
 
   res.json({ session: data.session });
+
 });
 
 export default router;

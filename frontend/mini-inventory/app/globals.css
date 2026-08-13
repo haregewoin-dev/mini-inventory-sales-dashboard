@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #161b22;
+  --parchment: #f7f4ec;
+  --amber: #e8a33d;
+  --slate: #5b6472;
+  --stock-green: #3c8a5b;
+  --kraft-dark: #8b5a2b;
+  --kraft: #b98a54;
+  --kraft-light: #e4c99a;
+  --ink-brown: #4a2c17;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+.font-mono {
+  font-family: var(--font-mono);
+}

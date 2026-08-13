@@ -23,6 +23,7 @@ export async function RequireAuth(req: Request, res:Response, next:NextFunction)
         req.user = {
             id: dbUser.id,
             email: dbUser.email,
+            name:dbUser.name,
             role: dbUser.role,
         }
         next();
